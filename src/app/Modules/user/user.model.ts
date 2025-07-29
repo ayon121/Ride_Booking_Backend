@@ -34,10 +34,10 @@ const UserSchema = new Schema<IUser>(
     isVerified: { type: Boolean, default: false },
     isDelete: { type: Boolean, default: false },
     auths: { type: [AuthProviderSchema], default: [] },
-    
+
     isOnRide: { type: Boolean, default: false },
     currentRide: { type: Schema.Types.ObjectId, ref: "Ride" , default: null}, 
-    previousRides: [{ type: Schema.Types.ObjectId, ref: "Ride" }],
+    Ridehistory: [{ type: Schema.Types.ObjectId, ref: "Ride" }],
   },
   {
     timestamps: true,

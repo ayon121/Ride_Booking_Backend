@@ -62,7 +62,7 @@ const UpdateDriverService = async (driverId: string, payload: Partial<IDriverFie
         }
     }
 
-    if (payload.isActive || payload.isDelete || payload.isVerified || payload.isApproved) {
+    if (payload.isActive || payload.isDelete || payload.isVerified || payload.isApproved || payload.isSuspended) {
         if (decodedToken.role === Role.USER || decodedToken.role === Role.DRIVER) {
             throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
         }
