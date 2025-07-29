@@ -7,14 +7,7 @@ import { JwtPayload } from "jsonwebtoken";
 
 
 
-// type AsncHandler = (req: Request, res: Response, next: NextFunction) => Promise<void>
 
-// const catchAsync = (fn : AsncHandler) => (req: Request, res: Response, next: NextFunction) => {
-//     Promise.resolve(fn(req, res , next)).catch((err : any)=> {
-//         console.log(err);
-//         next(err)
-//     })
-// }
 
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -28,11 +21,6 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
             data : user,
 
         })
-
-        // res.status(201).json({
-        //     message: "User Created Successfully",
-        //     user
-        // })
 
         
     } catch (err: any) {
@@ -48,8 +36,6 @@ const UpdateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
 
         const userId = req.params.id
-        // const token = req.headers.authorization
-        // const verified = verifyToken(token as string , envVars.JWT_SECRET) as JwtPayload
         const payload = req.body
         const verified = req.user;
 

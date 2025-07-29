@@ -16,7 +16,6 @@ const createUserService = async (payload: Partial<IUser>) => {
     }
 
     const hashPassword = await bcrypt.hash(password as string, Number(envVars.BCRYPT_SALT))
-    // const isPasswordMatch = await bcrypt.compare(password as string , hashPassword)
 
     const autProvider: IAuthProvider = { provider: "credentials", providerid: email as string }
     const user = await User.create({
@@ -61,7 +60,7 @@ const UpdateUserService = async (userId: string, payload: Partial<IUser>, decode
      */
 
     if (payload.role) {
-        if (decodedToken.role === Role.USER || decodedToken.role === Role.GUIDE) {
+        if (decodedToken.role === Role.USER || decodedToken.role === Role.DRIVER) {
             throw new AppError(401, "You are not authorized");
         }
 
@@ -71,7 +70,7 @@ const UpdateUserService = async (userId: string, payload: Partial<IUser>, decode
     }
 
     if (payload.isActive || payload.isDelete || payload.isVerified) {
-        if (decodedToken.role === Role.USER || decodedToken.role === Role.GUIDE) {
+        if (decodedToken.role === Role.USER || decodedToken.role === Role.DRIVER) {
             throw new AppError(401, "You are not authorized");
         }
     }

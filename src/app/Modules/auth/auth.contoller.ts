@@ -15,10 +15,6 @@ import passport from "passport";
 const creadentialLogin = async (req: Request, res: Response, next: NextFunction) => {
     try {
 
-        // from service login system
-        // const loginInfo = await AuthServices.creadentialLoginService(req.body)
-
-        // from passport login system
         passport.authenticate("local", async (err : any , user : any , info : any ) => {
 
             if(err){
@@ -37,7 +33,7 @@ const creadentialLogin = async (req: Request, res: Response, next: NextFunction)
             sendResponse(res, {
                 success: true,
                 statusCode: 201,
-                message: "User Logged In Successfully",
+                message: `${rest?.role || "User"} Logged In Successfully`,
                 data: {
                     accesstoken : userTokens.accesstoken, 
                     refreshtoken : userTokens.refreshtoken,
@@ -48,16 +44,6 @@ const creadentialLogin = async (req: Request, res: Response, next: NextFunction)
 
         })(req , res, next)
 
-
-        // // saving cookie in the frontend browser
-        // res.cookie("refreshtoken" , loginInfo.refreshToken , {
-        //     httpOnly : true,
-        //     secure : false
-        // })
-        // res.cookie("accesstoken" , loginInfo.accesstoken, {
-        //     httpOnly : true,
-        //     secure : false
-        // })
 
 
     } catch (err: any) {
@@ -76,12 +62,6 @@ const getNewAccessToken = async (req: Request, res: Response, next: NextFunction
             throw new AppError(500, "No Refresh Token")
         }
         const tokenInfo = await AuthServices.getNewAccessToken(refreshToken as string)
-
-        // setting cookie for frontend
-        // res.cookie("accesstoken" , tokenInfo.accesstoken, {
-        //     httpOnly : true,
-        //     secure : false
-        // })
 
         setAuthCookie(res, tokenInfo)
 
@@ -155,8 +135,6 @@ const googleCallbackController = catchAsync(async (req: Request, res: Response, 
     if (redirectTo.startsWith("/")) {
         redirectTo = redirectTo.slice(1)
     }
-
-    // /booking => booking , => "/" => ""
     const user = req.user;
 
     if (!user) {
@@ -167,12 +145,6 @@ const googleCallbackController = catchAsync(async (req: Request, res: Response, 
 
     setAuthCookie(res, tokenInfo)
 
-    // sendResponse(res, {
-    //     success: true,
-    //     statusCode: httpStatus.OK,
-    //     message: "Password Changed Successfully",
-    //     data: null,
-    // })
 
     res.redirect(`${envVars.FRONTEND_URL}/${redirectTo}`)
 })

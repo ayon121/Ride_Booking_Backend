@@ -2,7 +2,7 @@ import { Response } from "express";
 
 export interface AuthTokens {
     accesstoken ?: string;
-    refreshToken ?: string; 
+    refreshtoken ?: string; 
 }
 export const setAuthCookie = (res : Response , tokenInfo : AuthTokens) => {
     if(tokenInfo.accesstoken){
@@ -12,8 +12,8 @@ export const setAuthCookie = (res : Response , tokenInfo : AuthTokens) => {
         })
     }
 
-    if(tokenInfo.refreshToken){
-        res.cookie("refreshtoken" , tokenInfo.refreshToken , {
+    if(tokenInfo.refreshtoken){
+        res.cookie("refreshtoken" , tokenInfo.refreshtoken , {
             httpOnly : true,
             secure : false
         })

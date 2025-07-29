@@ -8,7 +8,7 @@ import { IsActive } from "../Modules/user/user.interface"
 
 export const checkAuth = (...authRoles: string[]) => async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const accesstoken = req.headers.authorization
+        const accesstoken = req.cookies.accesstoken
 
         if (!accesstoken) {
             throw new AppError(404, "User Not Verified")

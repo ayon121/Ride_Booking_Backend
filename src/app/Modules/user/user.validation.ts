@@ -58,9 +58,7 @@ export const updateUserZodSchema = z.object({
         })
         .optional(),
     role: z
-        // .enum(["ADMIN", "GUIDE", "USER", "SUPER_ADMIN"])
-        .enum(Object.values(Role) as [string])
-        .optional(),
+        .enum([Role.DRIVER, Role.USER]),
     isActive: z
         .enum(Object.values(IsActive) as [string])
         .optional(),
