@@ -44,7 +44,7 @@ const UpdateUser = async (req: Request, res: Response, next: NextFunction) => {
         sendResponse(res , {
             success : true,
             statusCode : 201,
-            message : "User Created Successfully",
+            message : "User Updated Successfully",
             data : user,
 
         })
@@ -67,7 +67,7 @@ const getAllUser = async (req: Request, res: Response, next: NextFunction) => {
         sendResponse(res , {
             success : true,
             statusCode : 201,
-            message : "User Created Successfully",
+            message : "All User Fetched Successfully",
             data : result.data,
             meta : result.meta,
         })

@@ -19,19 +19,19 @@ export enum IsActive {
     BLOCKED= "BLOKED"
 }
 export interface IUser {
-    _id ?: Types.ObjectId
-    name : string,
-    email : string , 
-    password ?: string,
-    phone ?: string , 
-    picture ?: string,
-    address ?: string ,
-    isDelete ?: boolean,
-    isActive ?: IsActive,
-    isVerified ?: boolean,
+  _id?: Types.ObjectId;
+  name: string;
+  email: string;
+  password?: string;
+  phone?: string;
+  picture?: string;
+  address?: string;
+  isDelete?: boolean;
+  isActive?: IsActive;
+  isVerified?: boolean;
 
-    auths : IAuthProvider[],
-    role : Role,
-    bookings ?: Types.ObjectId[]
-    guides ?: Types.ObjectId[]
+  auths: IAuthProvider[];
+  role: Role;
+  currentRide?: Types.ObjectId;        
+  previousRides?: Types.ObjectId[];
 }

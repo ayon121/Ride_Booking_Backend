@@ -1,5 +1,5 @@
 
-
+import httpStatus from "http-status-codes";
 import { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../../Config/env";
 import AppError from "../../ErrorHelpers/AppError";
@@ -47,31 +47,20 @@ const UpdateUserService = async (userId: string, payload: Partial<IUser>, decode
     const ifUserExist = await User.findById(userId);
 
     if (!ifUserExist) {
-        throw new AppError(401, "User Not Found")
+        throw new AppError(httpStatus.FORBIDDEN, "User Not Found")
     }
-
-    /**
-     * email - can not update
-     * name, phone, password address
-     * password - re hashing
-     *  only admin superadmin - role, isDeleted...
-     * 
-     * promoting to superadmin - superadmin
-     */
 
     if (payload.role) {
         if (decodedToken.role === Role.USER || decodedToken.role === Role.DRIVER) {
-            throw new AppError(401, "You are not authorized");
-        }
-
-        if (payload.role === Role.SUPER_ADMIN && decodedToken.role === Role.ADMIN) {
-            throw new AppError(401, "You are not authorized");
+            throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
         }
     }
 
+
+
     if (payload.isActive || payload.isDelete || payload.isVerified) {
         if (decodedToken.role === Role.USER || decodedToken.role === Role.DRIVER) {
-            throw new AppError(401, "You are not authorized");
+            throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
         }
     }
 

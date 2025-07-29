@@ -145,6 +145,7 @@ const googleCallbackController = catchAsync(async (req: Request, res: Response, 
 
     setAuthCookie(res, tokenInfo)
 
+   
 
     res.redirect(`${envVars.FRONTEND_URL}/${redirectTo}`)
 })
