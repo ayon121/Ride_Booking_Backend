@@ -12,9 +12,8 @@ import { envVars } from "../../Config/env";
 import { catchAsync } from "../../utils/catchAsync";
 import passport from "passport";
 
-const creadentialLogin = async (req: Request, res: Response, next: NextFunction) => {
+const creadentialUserLogin = async (req: Request, res: Response, next: NextFunction) => {
     try {
-
         passport.authenticate("local", async (err : any , user : any , info : any ) => {
 
             if(err){
@@ -38,6 +37,44 @@ const creadentialLogin = async (req: Request, res: Response, next: NextFunction)
                     accesstoken : userTokens.accesstoken, 
                     refreshtoken : userTokens.refreshtoken,
                     user: rest
+
+                }
+            })
+
+        })(req , res, next)
+
+
+
+    } catch (err: any) {
+        console.log(err);
+        next(err)
+    }
+}
+const creadentialDriverLogin = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        passport.authenticate("local-driver", async (err : any , driver : any , info : any  ) => {
+
+            if(err){
+                return next(err)
+            }
+
+            if(!driver){
+                return next(new AppError(401 , info.message))
+            }
+
+            const driverTokens = CreateUserToken(driver)
+            const { password: pass, ...rest } = driver.toObject()
+
+            setAuthCookie(res, driverTokens)
+
+            sendResponse(res, {
+                success: true,
+                statusCode: 201,
+                message: `${rest?.role || "Driver"} Logged In Successfully`,
+                data: {
+                    accesstoken : driverTokens.accesstoken, 
+                    refreshtoken : driverTokens.refreshtoken,
+                    driver: rest
 
                 }
             })
@@ -106,7 +143,7 @@ const logout = async (req: Request, res: Response, next: NextFunction) => {
 
 
 
-const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+const resetPasswordUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
 
 
@@ -115,7 +152,7 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
         const decodedToken = req.user
 
 
-        await AuthServices.resetPassword(oldPassword, newPassword, decodedToken as JwtPayload)
+        await AuthServices.resetPasswordUser(oldPassword, newPassword, decodedToken as JwtPayload)
 
         sendResponse(res, {
             success: true,
@@ -128,6 +165,31 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
         next(err)
     }
 }
+const resetPasswordDriver = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+
+        const newPassword = req.body.newPassword;
+        const oldPassword = req.body.oldPassword;
+        const decodedToken = req.user
+
+
+        await AuthServices.resetPasswordDriver(oldPassword, newPassword, decodedToken as JwtPayload)
+
+        sendResponse(res, {
+            success: true,
+            statusCode: 201,
+            message: "Password Changed Successfully",
+            data: null
+        })
+    } catch (err: any) {
+        console.log(err);
+        next(err)
+    }
+}
+
+
+
 const googleCallbackController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
     let redirectTo = req.query.state ? req.query.state as string : ""
@@ -150,9 +212,11 @@ const googleCallbackController = catchAsync(async (req: Request, res: Response, 
     res.redirect(`${envVars.FRONTEND_URL}/${redirectTo}`)
 })
 export const AuthControllers = {
-    creadentialLogin,
+    creadentialUserLogin,
+    creadentialDriverLogin,
     getNewAccessToken,
     logout,
-    resetPassword,
+    resetPasswordUser,
+    resetPasswordDriver,
     googleCallbackController
 }

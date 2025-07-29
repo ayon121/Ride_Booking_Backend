@@ -1,12 +1,14 @@
 import { Types } from "mongoose";
 import { IAuthProvider, IsActive, Role } from "../user/user.interface";
 
-export interface IDriverRating {
+export interface IDriverReviews {
     rating: number;
     review?: string;
     riderId: Types.ObjectId;
     createdAt?: Date;
 }
+
+
 
 export interface IDriverFields {
     _id?: Types.ObjectId;
@@ -25,12 +27,14 @@ export interface IDriverFields {
     isDelete?: boolean;
     isActive?: IsActive;
     isApproved?: boolean;
+    isSuspended ?: boolean;
+    isOnRide ?: boolean;
     isVerified?: boolean;
     isOnline: boolean;
     totalRides: number;
     earnings?: number;
     rating?: number;
     driverlocation: string;
-    driverratings: IDriverRating[];
+    driverReviews: IDriverReviews[];
     currentRideId?: Types.ObjectId;
 }

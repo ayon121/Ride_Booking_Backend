@@ -32,6 +32,7 @@ export interface IUser {
 
   auths: IAuthProvider[];
   role: Role;
+  isOnRide ?: boolean;
   currentRide?: Types.ObjectId;        
   previousRides?: Types.ObjectId[];
 }

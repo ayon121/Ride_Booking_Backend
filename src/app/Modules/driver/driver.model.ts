@@ -1,10 +1,10 @@
 import { Schema, model } from "mongoose";
-import { IDriverFields } from "./driver.interface";
+import { IDriverFields, IDriverReviews } from "./driver.interface";
 
 import { AuthProviderSchema } from "../user/user.model";
 import { IsActive, Role } from "../user/user.interface";
 
-const DriverReviewSchema = new Schema(
+const DriverReviewSchema = new Schema<IDriverReviews>(
   {
     rating: { type: Number, required: true },
     review: { type: String },
@@ -15,8 +15,8 @@ const DriverReviewSchema = new Schema(
 
 const DriverSchema = new Schema<IDriverFields>(
   {
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    name: { type: String, required: true },  //
+    email: { type: String, required: true, unique: true },//
     password: { type: String },
     phone: { type: String },
     picture: { type: String },
@@ -27,10 +27,10 @@ const DriverSchema = new Schema<IDriverFields>(
       enum: Object.values(Role),
       default: Role.DRIVER,
     },
-    licenseNumber: { type: String, required: true },
-    vehicleType: { type: String, required: true },
-    vehicleModel: { type: String, required: true },
-    vehiclePlate: { type: String, required: true },
+    licenseNumber: { type: String, required: true },//
+    vehicleType: { type: String, required: true },//
+    vehicleModel: { type: String, required: true }, //
+    vehiclePlate: { type: String, required: true },//
 
     isDelete: { type: Boolean, default: false },
     isActive: {
@@ -46,8 +46,11 @@ const DriverSchema = new Schema<IDriverFields>(
     earnings: { type: Number, default: 0 },
     rating: { type: Number, default: 0 },
 
-    driverlocation: { type: String },
-    driverratings: [DriverReviewSchema],
+
+    isOnRide : { type: Boolean, default: false },
+    isSuspended : { type: Boolean, default: false },
+    driverlocation: { type: String , required : true , default : "Dhaka"},
+    driverReviews:  {type: [DriverReviewSchema], default: [] },
     currentRideId: { type: Schema.Types.ObjectId, ref: "Ride", default: null },
   },
   {

@@ -8,39 +8,81 @@ import { Role } from "../Modules/user/user.interface";
 import { envVars } from "./env";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcryptjs";
+import Driver from "../Modules/driver/driver.model";
 
 
-passport.use(
-    new LocalStrategy({
-        usernameField: "email",
-        passwordField: "password"
-    }, async (email: string, password: string, done: any) => {
-        try {
-            const isUserExist = await User.findOne({ email })
-            if (!isUserExist) {
-                return done(null, false, { message: "User Don't Exist" })
-            }
-
-            const isGoogleAuthenticated = isUserExist.auths.some(providersObject => providersObject.provider == "google")
-
-            if(isGoogleAuthenticated  && !isUserExist.password){
-                return done(null , false , {message : "You have Authenticated through Google Login"})
-            }
-            const isPasswordMatch = await bcrypt.compare(password as string, isUserExist.password as string)
-
-            if (!isPasswordMatch) {
-                return done(null , false , {message : "Incorrect Password"})
-            }
-
-            return done(null , isUserExist)
-
-
-        } catch (error) {
-            console.log(error);
-            done(error)
+//  for riders and admins
+passport.use("local",
+    new LocalStrategy(
+        {
+            usernameField: "email",
+            passwordField: "password",
         }
+        , async (email: string, password: string, done: any ) => {
+            try {
+                const isUserExist = await User.findOne({ email })
+                if (!isUserExist) {
+                    return done(null, false, { message: "User Don't Exist" })
+                }
 
-    })
+                const isGoogleAuthenticated = isUserExist.auths.some(providersObject => providersObject.provider == "google")
+
+                if (isGoogleAuthenticated && !isUserExist.password) {
+                    return done(null, false, { message: "You have Authenticated through Google Login" })
+                }
+                const isPasswordMatch = await bcrypt.compare(password as string, isUserExist.password as string)
+
+                if (!isPasswordMatch) {
+                    return done(null, false, { message: "Incorrect Password" })
+                }
+
+                return done(null, isUserExist)
+
+
+            } catch (error) {
+                console.log(error);
+                done(error)
+            }
+
+        })
+)
+
+
+
+// driver login system
+passport.use("local-driver",
+    new LocalStrategy(
+        {
+            usernameField: "email",
+            passwordField: "password",
+        }
+        , async (email: string, password: string, done: any ) => {
+            try {
+                const isDriverExist = await Driver.findOne({ email })
+                if (!isDriverExist) {
+                    return done(null, false, { message: "Driver Don't Exist" })
+                }
+
+                const isGoogleAuthenticated = isDriverExist.auths.some(providersObject => providersObject.provider == "google")
+
+                if (isGoogleAuthenticated && !isDriverExist.password) {
+                    return done(null, false, { message: "You have Authenticated through Google Login" })
+                }
+                const isPasswordMatch = await bcrypt.compare(password as string, isDriverExist.password as string)
+
+                if (!isPasswordMatch) {
+                    return done(null, false, { message: "Incorrect Password" })
+                }
+
+                return done(null, isDriverExist)
+
+
+            } catch (error) {
+                console.log(error);
+                done(error)
+            }
+
+        })
 )
 
 passport.use(

@@ -9,6 +9,7 @@ import { IUser } from "../user/user.interface"
 import { User } from "../user/user.model"
 import bcrypt from "bcryptjs";
 import { envVars } from "../../Config/env";
+import Driver from "../driver/driver.model";
 
 const creadentialLoginService = async (payload: Partial<IUser>) => {
     const { email, password } = payload
@@ -50,16 +51,13 @@ const getNewAccessToken = async (refreshToken: string) => {
     }
 
 }
-const resetPassword = async (oldPassword: string, newPassword: string, decodedToken: JwtPayload) => {
+const resetPasswordUser = async (oldPassword: string, newPassword: string, decodedToken: JwtPayload) => {
 
     const user = await User.findById(decodedToken.userId)
     const isOldPasswordMatch = await bcrypt.compare(oldPassword, user!.password as string)
     if (!isOldPasswordMatch) {
         throw new AppError(401, "Old Password does not matched")
     }
-
-
-
 
     // hashing new password and saving it in the database using save method
     user!.password = await bcrypt.hash(newPassword, Number(envVars.BCRYPT_SALT))
@@ -71,8 +69,27 @@ const resetPassword = async (oldPassword: string, newPassword: string, decodedTo
 
 }
 
+
+const resetPasswordDriver = async (oldPassword: string, newPassword: string, decodedToken: JwtPayload) => {
+
+    const driver = await Driver.findById(decodedToken.userId)
+    const isOldPasswordMatch = await bcrypt.compare(oldPassword, driver!.password as string)
+    if (!isOldPasswordMatch) {
+        throw new AppError(401, "Old Password does not matched")
+    }
+
+    // hashing new password and saving it in the database using save method
+    driver!.password = await bcrypt.hash(newPassword, Number(envVars.BCRYPT_SALT))
+    driver!.save()
+
+
+
+    return true
+
+}
 export const AuthServices = {
     creadentialLoginService,
     getNewAccessToken,
-    resetPassword,
+    resetPasswordUser,
+    resetPasswordDriver,
 }

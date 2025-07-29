@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { NextFunction, Request, Response } from "express"
 import AppError from "../ErrorHelpers/AppError"
 import { JwtPayload } from "jsonwebtoken"
@@ -5,6 +6,8 @@ import { envVars } from "../Config/env"
 import { verifyToken } from "../utils/jwt"
 import { User } from "../Modules/user/user.model"
 import { IsActive } from "../Modules/user/user.interface"
+import Driver from "../Modules/driver/driver.model"
+
 
 export const checkAuth = (...authRoles: string[]) => async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -22,7 +25,16 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
         if (!verifiedToken) {
             throw new AppError(403, "User Not Verified")
         }
-        const isUserExist = await User.findOne({ email: verifiedToken.email })
+
+
+        let isUserExist = null
+        if(verifiedToken.role === "DRIVER"){
+            isUserExist = await Driver.findOne({ email: verifiedToken.email })
+        }
+        else {
+            isUserExist = await User.findOne({ email: verifiedToken.email })
+        }
+
 
         if (!isUserExist) {
             throw new AppError(500, "User Doesn't Exist")

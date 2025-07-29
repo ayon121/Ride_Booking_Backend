@@ -6,12 +6,17 @@ import passport from "passport";
 
 const router = Router()
 
-router.post("/user/login", AuthControllers.creadentialLogin)
+router.post("/user/login", AuthControllers.creadentialUserLogin)
+router.post("/driver/login", AuthControllers.creadentialDriverLogin)
 router.post("/refresh-token", AuthControllers.getNewAccessToken)
 router.post("/logout" , AuthControllers.logout)
-router.post("/reset-password", checkAuth(...Object.values(Role)) , AuthControllers.resetPassword)
+router.post("/user/reset-password", checkAuth(...Object.values(Role)) , AuthControllers.resetPasswordUser)
+router.post("/driver/reset-password", checkAuth(...Object.values(Role)) , AuthControllers.resetPasswordDriver)
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+
+
+// google login for users
 router.get("/google", async (req: Request, res: Response, next: NextFunction) => {
     const redirect = req.query.redirect || "/"
     passport.authenticate("google", { scope: ["profile", "email"], state: redirect as string })(req, res, next)
