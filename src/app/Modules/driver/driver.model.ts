@@ -52,6 +52,7 @@ const DriverSchema = new Schema<IDriverFields>(
     driverlocation: { type: String , required : true , default : "Dhaka"},
     driverReviews:  {type: [DriverReviewSchema], default: [] },
     currentRide: { type: Schema.Types.ObjectId, ref: "Ride", default: null },
+    Ridehistory: [{ type: Schema.Types.ObjectId, ref: "Ride" , default : null} ],
   },
   {
     timestamps: true,

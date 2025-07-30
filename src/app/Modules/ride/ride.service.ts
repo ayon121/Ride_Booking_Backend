@@ -1,20 +1,20 @@
 import { JwtPayload } from "jsonwebtoken";
 import AppError from "../../ErrorHelpers/AppError";
-import { IRide } from "./ride.interface";
+import { IRide, RideStatus } from "./ride.interface";
 import Ride from "./ride.model";
 import { User } from "../user/user.model";
 import Driver from "../driver/driver.model";
 import { Role } from "../user/user.interface";
 
 
-const createRideService = async (payload: Partial<IRide> , decodedToken: JwtPayload) => {
+const createRideService = async (payload: Partial<IRide>, decodedToken: JwtPayload) => {
 
-    
+
     const riderId = decodedToken?.userId
-    const { pickupLocation , dropLocation , price  } = payload;
+    const { pickupLocation, dropLocation, price } = payload;
 
     if (!riderId || !pickupLocation || !dropLocation || !price) {
-        throw new AppError(500 ,"Required ride fields are missing");
+        throw new AppError(500, "Required ride fields are missing");
     }
 
     const ride = await Ride.create({
@@ -46,7 +46,7 @@ const getAllRequestedRideService = async () => {
 }
 
 
-const getMyRideService = async (decodedToken : JwtPayload) => {
+const getMyRideService = async (decodedToken: JwtPayload) => {
 
     let currentRideId = null;
 
@@ -61,7 +61,7 @@ const getMyRideService = async (decodedToken : JwtPayload) => {
     }
 
 
-     if (!currentRideId) {
+    if (!currentRideId) {
         return {
             data: null,
             meta: {
@@ -94,9 +94,104 @@ const getAllRideService = async () => {
     }
 }
 
+
+
+//  ride status updated by driver
+const updateRideStatusDriverService = async (rideId: string, status: string, decodedToken: JwtPayload) => {
+    const ride = await Ride.findById(rideId);
+
+    if (!ride) {
+        throw new Error("Ride not found");
+    }
+
+
+    //  ride accept system
+    if (status === RideStatus.ACCEPTED) {
+        if (ride.driverId) {
+            throw new Error("This ride has already been accepted");
+        }
+        ride.driverId = decodedToken.userId;
+        ride.ridestatus = RideStatus.ACCEPTED;
+        await ride.save();
+
+
+        // 🛠️ Update driver info
+        await Driver.findByIdAndUpdate(
+            decodedToken.userId,
+            {
+                currentRide: ride._id,
+                $addToSet: { Ridehistory: ride._id }
+            },
+            { new: true }
+        );
+
+        return ride;
+    }
+
+    // check if driver is the owner of this ride
+    if (ride.driverId?.toString() !== decodedToken.userId) {
+        throw new Error("You are not authorized to update this ride.");
+    }
+
+
+
+    if (status === RideStatus.INTRANSIT) {
+        ride.ridestatus = RideStatus.INTRANSIT;
+        await ride.save();
+    }
+
+    if (status === RideStatus.PICKEDUP) {
+        ride.ridestatus = RideStatus.PICKEDUP;
+        await ride.save();
+    }
+
+    if (status === RideStatus.COMPLETED) {
+        ride.ridestatus = RideStatus.COMPLETED;
+        await ride.save();
+
+        //Clear driver's currentRide
+        await Driver.findByIdAndUpdate(decodedToken.userId, {
+            $set: { currentRide: null }
+        });
+    }
+
+    return ride;
+};
+
+
+
+//  ride status updated by rider
+const updateRideStatusRiderService = async (rideId: string, status: string, decodedToken: JwtPayload) => {
+    const ride = await Ride.findById(rideId);
+
+
+    if (!ride) {
+        throw new Error("Ride not found");
+    }
+
+    // Check if the logged-in user is the owner (rider)
+    if (ride.riderId.toString() !== decodedToken.userId) {
+        throw new Error("You are not authorized to cancel this ride");
+    }
+
+    if (ride.ridestatus === RideStatus.ACCEPTED || ride.ridestatus === RideStatus.COMPLETED || ride.ridestatus === RideStatus.INTRANSIT || ride.ridestatus === RideStatus.PICKEDUP) {
+        throw new Error(`Ride is already ${ride.ridestatus}. Not able to cancel now.`);
+    }
+
+    if (status === RideStatus.CANCELLED) {
+        ride.ridestatus = RideStatus.CANCELLED;
+        await ride.save();
+    }
+
+    return ride;
+};
 export const RideServices = {
     createRideService,
     getAllRideService,
     getAllRequestedRideService,
     getMyRideService,
+    // for drivers
+    updateRideStatusDriverService,
+    //for riders
+    updateRideStatusRiderService,
 }

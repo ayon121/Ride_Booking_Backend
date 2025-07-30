@@ -36,5 +36,6 @@ export interface IDriverFields {
     rating?: number;
     driverlocation: string;
     driverReviews: IDriverReviews[];
-    currentRideId?: Types.ObjectId;
+    currentRide?: Types.ObjectId;
+    Ridehistory?: Types.ObjectId[];
 }

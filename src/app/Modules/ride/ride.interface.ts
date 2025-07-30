@@ -6,7 +6,8 @@ export enum RideStatus {
     ACCEPTED = "ACCEPTED",
     PICKEDUP = "PICKEDUP",
     INTRANSIT = "INTRANSIT",
-    COMPLETED = "CANCELLED",
+    COMPLETED = "COMPLETED",
+    CANCELLED = "CANCELLED",
 }
 
 
