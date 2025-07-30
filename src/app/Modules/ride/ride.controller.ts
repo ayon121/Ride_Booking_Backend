@@ -73,8 +73,31 @@ const getAllRideRequests = async (req: Request, res: Response, next: NextFunctio
 
 
 
+const getMyRideController = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const decodedToken = req.user as JwtPayload
+        const result = await RideServices.getMyRideService(decodedToken )
+        sendResponse(res , {
+            success : true,
+            statusCode : 201,
+            message : "All Ride Requests Fetched Successfully",
+            data : result.data,
+            meta : result.meta,
+        })
+
+
+    } catch (err) {
+        next(err)
+
+
+    }
+}
+
+
+
 export const RideControllers = {
     RequestRide,
     getAllRides,
     getAllRideRequests,
+    getMyRideController,
 }

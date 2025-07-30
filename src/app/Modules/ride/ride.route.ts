@@ -10,6 +10,9 @@ export const Rideroute = express.Router();
 Rideroute.post("/request", checkAuth(Role.USER) , RideControllers.RequestRide )
 // for drivers
 Rideroute.get("/request", checkAuth(Role.DRIVER) , RideControllers.getAllRideRequests )
+// get my current ride
+Rideroute.get("/me", checkAuth(...Object.values(Role)) , RideControllers.getMyRideController )
+
 
 
 

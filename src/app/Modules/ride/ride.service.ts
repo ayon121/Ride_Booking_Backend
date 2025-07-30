@@ -2,6 +2,9 @@ import { JwtPayload } from "jsonwebtoken";
 import AppError from "../../ErrorHelpers/AppError";
 import { IRide } from "./ride.interface";
 import Ride from "./ride.model";
+import { User } from "../user/user.model";
+import Driver from "../driver/driver.model";
+import { Role } from "../user/user.interface";
 
 
 const createRideService = async (payload: Partial<IRide> , decodedToken: JwtPayload) => {
@@ -43,6 +46,40 @@ const getAllRequestedRideService = async () => {
 }
 
 
+const getMyRideService = async (decodedToken : JwtPayload) => {
+
+    let currentRideId = null;
+
+    // eslint-disable-next-line no-console
+    console.log(decodedToken);
+    if (decodedToken.role === Role.USER) {
+        const user = await User.findById(decodedToken.userId).select("currentRide");
+        currentRideId = user?.currentRide;
+    } else if (decodedToken.role === Role.DRIVER) {
+        const driver = await Driver.findById(decodedToken.userId).select("currentRide");
+        currentRideId = driver?.currentRide;
+    }
+
+
+     if (!currentRideId) {
+        return {
+            data: null,
+            meta: {
+                message: "No current ride found."
+            }
+        };
+    }
+
+    const ride = await Ride.findById(currentRideId);
+
+    return {
+        data: ride,
+        meta: {
+            message: "Your ride found."
+        }
+    }
+}
+
 // admin or super-admin
 const getAllRideService = async () => {
     const rides = await Ride.find({})
@@ -60,5 +97,6 @@ const getAllRideService = async () => {
 export const RideServices = {
     createRideService,
     getAllRideService,
-    getAllRequestedRideService
+    getAllRequestedRideService,
+    getMyRideService,
 }

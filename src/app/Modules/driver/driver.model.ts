@@ -51,7 +51,7 @@ const DriverSchema = new Schema<IDriverFields>(
     isSuspended : { type: Boolean, default: false },
     driverlocation: { type: String , required : true , default : "Dhaka"},
     driverReviews:  {type: [DriverReviewSchema], default: [] },
-    currentRideId: { type: Schema.Types.ObjectId, ref: "Ride", default: null },
+    currentRide: { type: Schema.Types.ObjectId, ref: "Ride", default: null },
   },
   {
     timestamps: true,

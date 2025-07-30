@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+
 import { NextFunction, Request, Response } from "express"
 import AppError from "../ErrorHelpers/AppError"
 import { JwtPayload } from "jsonwebtoken"
