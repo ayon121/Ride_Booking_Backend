@@ -27,6 +27,38 @@ const createRideService = async (payload: Partial<IRide> , decodedToken: JwtPayl
 }
 
 
+
+// all requested rides for drivers
+const getAllRequestedRideService = async () => {
+    const rides = await Ride.find({ ridestatus: "REQUESTED" })
+
+    const TotalRideRequest = await Ride.countDocuments({ ridestatus: "REQUESTED" })
+
+    return {
+        data: rides,
+        meta: {
+            total: TotalRideRequest
+        }
+    }
+}
+
+
+// admin or super-admin
+const getAllRideService = async () => {
+    const rides = await Ride.find({})
+
+    const totalrides = await Ride.countDocuments()
+
+    return {
+        data: rides,
+        meta: {
+            total: totalrides
+        }
+    }
+}
+
 export const RideServices = {
     createRideService,
+    getAllRideService,
+    getAllRequestedRideService
 }

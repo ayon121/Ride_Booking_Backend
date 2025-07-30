@@ -10,7 +10,10 @@ import { checkAuth } from "../../Middlewares/CheckAuth";
 const router = express.Router();
 
 router.post("/register", validateRequest(createDriverZodSchema), DriverControllers.createDriver );
-router.get("/alldrivers" , checkAuth( Role.ADMIN, Role.SUPER_ADMIN)   ,DriverControllers.getAllDriver);
+
 router.patch("/:id", validateRequest(updateDriverZodSchema), DriverControllers.UpdateDriver );
+
+// admin or super admin routes
+router.get("/alldrivers" , checkAuth( Role.ADMIN, Role.SUPER_ADMIN)   ,DriverControllers.getAllDriver);
 
 export const DriverRoutes = router;
