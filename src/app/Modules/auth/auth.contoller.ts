@@ -11,17 +11,20 @@ import { CreateUserToken } from "../../utils/usertoken";
 import { envVars } from "../../Config/env";
 import { catchAsync } from "../../utils/catchAsync";
 import passport from "passport";
+import { User } from "../user/user.model";
+import Driver from "../driver/driver.model";
+import { Role } from "../user/user.interface";
 
 const creadentialUserLogin = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        passport.authenticate("local", async (err : any , user : any , info : any ) => {
+        passport.authenticate("local", async (err: any, user: any, info: any) => {
 
-            if(err){
+            if (err) {
                 return next(err)
             }
 
-            if(!user){
-                return next(new AppError(401 , info.message))
+            if (!user) {
+                return next(new AppError(401, info.message))
             }
 
             const userTokens = CreateUserToken(user)
@@ -34,14 +37,14 @@ const creadentialUserLogin = async (req: Request, res: Response, next: NextFunct
                 statusCode: 201,
                 message: `${rest?.role || "User"} Logged In Successfully`,
                 data: {
-                    accesstoken : userTokens.accesstoken, 
-                    refreshtoken : userTokens.refreshtoken,
+                    accesstoken: userTokens.accesstoken,
+                    refreshtoken: userTokens.refreshtoken,
                     user: rest
 
                 }
             })
 
-        })(req , res, next)
+        })(req, res, next)
 
 
 
@@ -52,14 +55,14 @@ const creadentialUserLogin = async (req: Request, res: Response, next: NextFunct
 }
 const creadentialDriverLogin = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        passport.authenticate("local-driver", async (err : any , driver : any , info : any  ) => {
+        passport.authenticate("local-driver", async (err: any, driver: any, info: any) => {
 
-            if(err){
+            if (err) {
                 return next(err)
             }
 
-            if(!driver){
-                return next(new AppError(401 , info.message))
+            if (!driver) {
+                return next(new AppError(401, info.message))
             }
 
             const driverTokens = CreateUserToken(driver)
@@ -72,14 +75,14 @@ const creadentialDriverLogin = async (req: Request, res: Response, next: NextFun
                 statusCode: 201,
                 message: `${rest?.role || "Driver"} Logged In Successfully`,
                 data: {
-                    accesstoken : driverTokens.accesstoken, 
-                    refreshtoken : driverTokens.refreshtoken,
+                    accesstoken: driverTokens.accesstoken,
+                    refreshtoken: driverTokens.refreshtoken,
                     driver: rest
 
                 }
             })
 
-        })(req , res, next)
+        })(req, res, next)
 
 
 
@@ -165,6 +168,7 @@ const resetPasswordUser = async (req: Request, res: Response, next: NextFunction
         next(err)
     }
 }
+
 const resetPasswordDriver = async (req: Request, res: Response, next: NextFunction) => {
     try {
 
@@ -190,6 +194,13 @@ const resetPasswordDriver = async (req: Request, res: Response, next: NextFuncti
 
 
 
+
+
+
+
+
+
+// for user --- for future implementation
 const googleCallbackController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
     let redirectTo = req.query.state ? req.query.state as string : ""
@@ -207,10 +218,52 @@ const googleCallbackController = catchAsync(async (req: Request, res: Response, 
 
     setAuthCookie(res, tokenInfo)
 
-   
+
 
     res.redirect(`${envVars.FRONTEND_URL}/${redirectTo}`)
 })
+
+
+
+
+//  user ---- driver profile system 
+const getMe = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const decodedToken = req.user as JwtPayload;
+
+
+
+        if (!decodedToken.userId || !decodedToken.role) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        let profile = null;
+
+        if (decodedToken.role === Role.USER) {
+            profile = await User.findById(decodedToken.userId).select("-password");
+        } else if (decodedToken.role === Role.DRIVER) {
+            profile = await Driver.findById(decodedToken.userId).select("-password");
+        }
+        else if (decodedToken.role === Role.ADMIN || decodedToken.role === Role.SUPER_ADMIN) {
+            profile = await User.findById(decodedToken.userId).select("-password");
+        }
+
+        if (!profile) {
+            return res.status(404).json({ message: "Profile not found" });
+        }
+
+
+        sendResponse(res, {
+            success: true,
+            statusCode: 201,
+            message: "Profile Fetched Successfully",
+            data: profile
+        })
+    } catch (error) {
+        next(error);
+    }
+};
 export const AuthControllers = {
     creadentialUserLogin,
     creadentialDriverLogin,
@@ -218,5 +271,6 @@ export const AuthControllers = {
     logout,
     resetPasswordUser,
     resetPasswordDriver,
-    googleCallbackController
+    googleCallbackController,
+    getMe
 }

@@ -12,6 +12,7 @@ router.post("/refresh-token", AuthControllers.getNewAccessToken)
 router.post("/logout" , AuthControllers.logout)
 router.post("/user/reset-password", checkAuth(...Object.values(Role)) , AuthControllers.resetPasswordUser)
 router.post("/driver/reset-password", checkAuth(...Object.values(Role)) , AuthControllers.resetPasswordDriver)
+router.get("/me", checkAuth(...Object.values(Role)) , AuthControllers.getMe)
 
 
 
