@@ -42,9 +42,10 @@ const getAllUserService = async () => {
 }
 
 
-const UpdateUserService = async (userId: string, payload: Partial<IUser>, decodedToken: JwtPayload) => {
+const UpdateUserService = async ( payload: Partial<IUser>, decodedToken: JwtPayload) => {
 
-    const ifUserExist = await User.findById(userId);
+
+    const ifUserExist = await User.findById(decodedToken.userId);
 
     if (!ifUserExist) {
         throw new AppError(httpStatus.FORBIDDEN, "User Not Found")
@@ -68,7 +69,7 @@ const UpdateUserService = async (userId: string, payload: Partial<IUser>, decode
         payload.password = await bcrypt.hash(payload.password, Number(envVars.BCRYPT_SALT))
     }
 
-    const newUpdatedUser = await User.findByIdAndUpdate(userId, payload, { new: true, runValidators: true })
+    const newUpdatedUser = await User.findByIdAndUpdate(decodedToken.userId, payload, { new: true, runValidators: true })
 
     return newUpdatedUser
 }

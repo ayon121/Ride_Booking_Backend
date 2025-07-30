@@ -46,8 +46,9 @@ const getAllDriverService = async () => {
 
 
 
-const UpdateDriverService = async (driverId: string, payload: Partial<IDriverFields>, decodedToken: JwtPayload) => {
-    const ifDriverExist = await Driver.findById(driverId);
+const UpdateDriverService = async ( payload: Partial<IDriverFields>, decodedToken: JwtPayload) => {
+
+    const ifDriverExist = await Driver.findById(decodedToken.userId);
 
     if (!ifDriverExist) {
         throw new AppError(404, "Driver not found");
@@ -73,7 +74,7 @@ const UpdateDriverService = async (driverId: string, payload: Partial<IDriverFie
         payload.password = await bcrypt.hash(payload.password, Number(envVars.BCRYPT_SALT))
     }
 
-    const updatedDriver = await Driver.findByIdAndUpdate(driverId, payload, {
+    const updatedDriver = await Driver.findByIdAndUpdate(decodedToken.userId, payload, {
         new: true,
         runValidators: true,
     });

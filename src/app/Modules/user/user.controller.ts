@@ -35,11 +35,10 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 const UpdateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
 
-        const userId = req.params.id
         const payload = req.body
-        const verified = req.user;
+        const decodedToken = req.user as JwtPayload;
 
-        const user = await UserServices.UpdateUserService(userId , payload , verified as JwtPayload)
+        const user = await UserServices.UpdateUserService( payload , decodedToken)
 
         sendResponse(res , {
             success : true,
@@ -105,7 +104,7 @@ const updateUserByAdmin = async (req: Request, res: Response, next: NextFunction
 export const getSingleUserByAdmin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId } = req.params;
-
+    
     const user = await UserServices.getSingleUserByAdminService(userId);
 
     res.status(200).json({

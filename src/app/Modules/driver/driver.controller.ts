@@ -28,11 +28,11 @@ const createDriver = async (req: Request, res: Response, next: NextFunction) => 
 const UpdateDriver = async (req: Request, res: Response, next: NextFunction) => {
     try {
 
-        const driverId = req.params.id
+        
         const payload = req.body
-        const verified = req.user;
+        const decodedToken = req.user as JwtPayload;
 
-        const user = await DriverServices.UpdateDriverService(driverId , payload , verified as JwtPayload)
+        const user = await DriverServices.UpdateDriverService( payload , decodedToken )
 
         sendResponse(res , {
             success : true,
