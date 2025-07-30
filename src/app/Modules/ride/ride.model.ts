@@ -12,7 +12,8 @@ const RideSchema = new Schema<IRide>({
   startedAt: { type: Date , default : null },
   completedAt: { type: Date , default : null },
   paymentMethod: { type: String, enum: ["CASH", "CARD"] , default : "CASH" },
-  isPaid: { type: Boolean, default: false }
+  isPaid: { type: Boolean, default: false },
+  pickupOtp : {type: Number , default : 0}
 }, {
   timestamps: true,
   versionKey: false

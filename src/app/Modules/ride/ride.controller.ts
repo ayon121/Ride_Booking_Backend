@@ -115,7 +115,7 @@ const updateRideStatus = async (req: Request, res: Response, next: NextFunction)
                 return res.status(403).json({ success: false, message: "Only Rider can cancel Ride " });
             }
             updatedRide = await RideServices.updateRideStatusDriverService(rideId, status, decodedToken);
-            
+
         }
 
         if (decodedToken.role === Role.USER) {
@@ -125,7 +125,7 @@ const updateRideStatus = async (req: Request, res: Response, next: NextFunction)
                 return res.status(403).json({ success: false, message: "You are not allowed" });
             }
             updatedRide = await RideServices.updateRideStatusRiderService(rideId, status, decodedToken);
-            
+
         }
 
 
@@ -143,10 +143,52 @@ const updateRideStatus = async (req: Request, res: Response, next: NextFunction)
     }
 };
 
+
+
+const updateRideByAdmin = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { rideId } = req.params;
+        const updateData = req.body;
+        const decodedToken = req.user as JwtPayload;
+
+        const ride = await RideServices.updateRideByAdminService(rideId, updateData, decodedToken);
+
+        res.status(200).json({
+            success: true,
+            message: "Ride updated successfully by admin",
+            data: ride,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
+export const getSingleRideAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { rideId } = req.params;
+    const ride = await RideServices.getSingleRideAdminService(rideId);
+    res.status(200).json({ success: true, data: ride });
+  } catch (error) {
+    next(error);
+  }
+};
 export const RideControllers = {
+    // for rider
     RequestRide,
-    getAllRides,
+
+
+    // for driver
     getAllRideRequests,
+    
+
+    // for rider and driver
+    updateRideStatus,
     getMyRideController,
-    updateRideStatus
+
+    // for admin
+    updateRideByAdmin,
+    getAllRides,
+    getSingleRideAdmin,
 }

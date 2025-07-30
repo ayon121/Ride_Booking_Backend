@@ -24,4 +24,5 @@ export interface IRide {
   completedAt?: Date;
   paymentMethod?: "CASH" | "CARD";
   isPaid?: boolean;
+  pickupOtp ?: number; // for future implementation
 }

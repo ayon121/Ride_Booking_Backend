@@ -16,7 +16,7 @@ Rideroute.get("/request", checkAuth(Role.DRIVER) , RideControllers.getAllRideReq
 Rideroute.get("/me", checkAuth(...Object.values(Role)) , RideControllers.getMyRideController )
 
 
-// update ride status -- for drivers -- for 
+// update ride status -- for drivers -- for riders
 Rideroute.patch("/status/:rideId" ,  checkAuth(Role.DRIVER , Role.USER) ,RideControllers.updateRideStatus)
 
 
@@ -24,3 +24,5 @@ Rideroute.patch("/status/:rideId" ,  checkAuth(Role.DRIVER , Role.USER) ,RideCon
 
 // admin or super admin routes
 Rideroute.get("/all", checkAuth(Role.ADMIN , Role.SUPER_ADMIN) , RideControllers.getAllRides )
+Rideroute.patch("/updateride/:rideId", checkAuth(Role.ADMIN , Role.SUPER_ADMIN) , RideControllers.updateRideByAdmin )
+Rideroute.get("/singleride/:rideId", checkAuth(Role.ADMIN , Role.SUPER_ADMIN) , RideControllers.getSingleRideAdmin )

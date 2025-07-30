@@ -97,6 +97,13 @@ const getAllRideService = async () => {
 
 
 //  ride status updated by driver
+const validStatusFlow: Record<string, string> = {
+    [RideStatus.REQUESTED]: RideStatus.ACCEPTED,
+    [RideStatus.ACCEPTED]: RideStatus.PICKEDUP,
+    [RideStatus.PICKEDUP]: RideStatus.INTRANSIT,
+    [RideStatus.INTRANSIT]: RideStatus.COMPLETED,
+};
+
 const updateRideStatusDriverService = async (rideId: string, status: string, decodedToken: JwtPayload) => {
     const ride = await Ride.findById(rideId);
 
@@ -104,23 +111,42 @@ const updateRideStatusDriverService = async (rideId: string, status: string, dec
         throw new Error("Ride not found");
     }
 
+    const currentStatus = ride.ridestatus;
 
-    //  ride accept system
+    // Step-by-step flow check
+    const expectedNextStatus = validStatusFlow[currentStatus];
+    if (status !== expectedNextStatus) {
+        throw new Error(
+            `Invalid status transition. Expected '${expectedNextStatus}' after '${currentStatus}', but got '${status}'.`
+        );
+    }
+
+    // Step 1: ------------------------------- ACCEPTED ----------------------
     if (status === RideStatus.ACCEPTED) {
-        if (ride.driverId) {
-            throw new Error("This ride has already been accepted");
+        const driver = await Driver.findById(decodedToken.userId);
+
+        if (!driver) {
+            throw new Error("Driver not found.");
         }
+
+        if (driver.isSuspended) {
+            throw new Error("Your account is suspended. You cannot accept rides.");
+        }
+
+        
+        if (ride.driverId) {
+            throw new Error("This ride has already been accepted.");
+        }
+
         ride.driverId = decodedToken.userId;
         ride.ridestatus = RideStatus.ACCEPTED;
         await ride.save();
 
-
-        // 🛠️ Update driver info
         await Driver.findByIdAndUpdate(
             decodedToken.userId,
             {
                 currentRide: ride._id,
-                $addToSet: { Ridehistory: ride._id }
+                $addToSet: { Ridehistory: ride._id },
             },
             { new: true }
         );
@@ -128,46 +154,43 @@ const updateRideStatusDriverService = async (rideId: string, status: string, dec
         return ride;
     }
 
-    // check if driver is the owner of this ride
+    // Check if current driver is the one assigned
     if (ride.driverId?.toString() !== decodedToken.userId) {
         throw new Error("You are not authorized to update this ride.");
     }
 
-
-
-    if (status === RideStatus.INTRANSIT) {
-        ride.ridestatus = RideStatus.INTRANSIT;
-        await ride.save();
-    }
-
+    // Step 2: -------------------------------- PICKEDUP --------------------------
     if (status === RideStatus.PICKEDUP) {
         ride.ridestatus = RideStatus.PICKEDUP;
         if (!ride.startedAt) {
             ride.startedAt = new Date();
         }
-
         await ride.save();
     }
 
-    if (status === RideStatus.COMPLETED) {
+    // Step 3: ------------------------------- INTRANSIT --------------------------
+    else if (status === RideStatus.INTRANSIT) {
+        ride.ridestatus = RideStatus.INTRANSIT;
+        await ride.save();
+    }
+
+    // Step 4: ------------------------------ COMPLETED --------------------------
+    else if (status === RideStatus.COMPLETED) {
         ride.ridestatus = RideStatus.COMPLETED;
         if (!ride.completedAt) {
             ride.completedAt = new Date();
         }
         await ride.save();
 
-
-        //Clear driver's currentRide and add earnings
         await Driver.findByIdAndUpdate(decodedToken.userId, {
             $inc: { earnings: ride.price || 0 },
-            $set: { currentRide: null }
+            $set: { currentRide: null },
         });
-
-
     }
 
     return ride;
 };
+
 
 
 
@@ -196,13 +219,63 @@ const updateRideStatusRiderService = async (rideId: string, status: string, deco
 
     return ride;
 };
+
+
+
+//  for admin to update everything in a ride
+const updateRideByAdminService = async (
+    rideId: string,
+    updateData: Partial<IRide>,
+    decodedToken: JwtPayload
+) => {
+    // Optional: Check if user is admin
+    if (decodedToken.role !== "admin") {
+        throw new Error("Unauthorized: Only admin can update ride details.");
+    }
+
+    const updatedRide = await Ride.findByIdAndUpdate(
+        rideId,
+        { $set: updateData },
+        { new: true }
+    );
+
+    if (!updatedRide) {
+        throw new Error("Ride not found");
+    }
+
+    return updatedRide;
+};
+
+
+
+export const getSingleRideAdminService = async (rideId: string) => {
+    const ride = await Ride.findById(rideId)
+        .populate("driverId", "name email")
+        .populate("riderId", "name email");
+    if (!ride) {
+        throw new Error("Ride not found");
+    }
+
+    return ride;
+};
+
+
 export const RideServices = {
-    createRideService,
-    getAllRideService,
-    getAllRequestedRideService,
-    getMyRideService,
-    // for drivers
-    updateRideStatusDriverService,
     //for riders
     updateRideStatusRiderService,
+    createRideService,
+
+
+    // for driver and riders
+    getMyRideService,
+
+    // for drivers
+    updateRideStatusDriverService,
+    getAllRequestedRideService,
+
+
+    // for admin
+    updateRideByAdminService,
+    getAllRideService,
+    getSingleRideAdminService,
 }
