@@ -14,6 +14,8 @@ Rideroute.get("/request", checkAuth(Role.DRIVER) , RideControllers.getAllRideReq
 
 // get my current ride
 Rideroute.get("/me", checkAuth(...Object.values(Role)) , RideControllers.getMyRideController )
+// get ride history for riders and drivers
+Rideroute.get("/history", checkAuth(Role.USER , Role.DRIVER) , RideControllers.getRideHistory )
 
 
 // update ride status -- for drivers -- for riders

@@ -133,7 +133,7 @@ const updateRideStatusDriverService = async (rideId: string, status: string, dec
             throw new Error("Your account is suspended. You cannot accept rides.");
         }
 
-        
+
         if (ride.driverId) {
             throw new Error("This ride has already been accepted.");
         }
@@ -223,11 +223,7 @@ const updateRideStatusRiderService = async (rideId: string, status: string, deco
 
 
 //  for admin to update everything in a ride
-const updateRideByAdminService = async (
-    rideId: string,
-    updateData: Partial<IRide>,
-    decodedToken: JwtPayload
-) => {
+const updateRideByAdminService = async (rideId: string, updateData: Partial<IRide>, decodedToken: JwtPayload) => {
     // Optional: Check if user is admin
     if (decodedToken.role !== "admin") {
         throw new Error("Unauthorized: Only admin can update ride details.");
@@ -260,6 +256,17 @@ export const getSingleRideAdminService = async (rideId: string) => {
 };
 
 
+const getRiderRideHistoryService = async (decodedToken: JwtPayload) => {
+    const rides = await Ride.find({ riderId: decodedToken.userId }).sort({ createdAt: -1 }).populate("driverId", "name email");
+    return rides;
+};
+
+const getDriverRideHistoryService = async (decodedToken: JwtPayload) => {
+    const rides = await Ride.find({ driverId: decodedToken.userId }).sort({ createdAt: -1 }).populate("riderId", "name email");
+    return rides;
+};
+
+
 export const RideServices = {
     //for riders
     updateRideStatusRiderService,
@@ -278,4 +285,9 @@ export const RideServices = {
     updateRideByAdminService,
     getAllRideService,
     getSingleRideAdminService,
+
+
+    // for ride history
+    getRiderRideHistoryService,
+    getDriverRideHistoryService,
 }

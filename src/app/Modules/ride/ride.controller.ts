@@ -153,11 +153,13 @@ const updateRideByAdmin = async (req: Request, res: Response, next: NextFunction
 
         const ride = await RideServices.updateRideByAdminService(rideId, updateData, decodedToken);
 
-        res.status(200).json({
+
+        sendResponse(res, {
             success: true,
+            statusCode: 201,
             message: "Ride updated successfully by admin",
             data: ride,
-        });
+        })
     } catch (error) {
         next(error);
     }
@@ -165,15 +167,50 @@ const updateRideByAdmin = async (req: Request, res: Response, next: NextFunction
 
 
 
-export const getSingleRideAdmin = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { rideId } = req.params;
-    const ride = await RideServices.getSingleRideAdminService(rideId);
-    res.status(200).json({ success: true, data: ride });
-  } catch (error) {
-    next(error);
-  }
+const getSingleRideAdmin = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { rideId } = req.params;
+        const ride = await RideServices.getSingleRideAdminService(rideId);
+        res.status(200).json({ success: true, data: ride });
+    } catch (error) {
+        next(error);
+    }
 };
+
+
+const getRideHistory = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const decodedToken = req.user as JwtPayload;
+
+        let rideHistory = null
+
+        if (decodedToken.role === Role.USER) {
+            rideHistory = await RideServices.getRiderRideHistoryService(decodedToken);
+        }
+        if (decodedToken.role === Role.DRIVER) {
+            rideHistory = await RideServices.getDriverRideHistoryService(decodedToken);
+        }
+
+
+        sendResponse(res, {
+            success: true,
+            statusCode: 201,
+            message: "Ride History Fetched Successfully",
+            data: rideHistory,
+        })
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
+
+
+
+
+
 export const RideControllers = {
     // for rider
     RequestRide,
@@ -181,7 +218,7 @@ export const RideControllers = {
 
     // for driver
     getAllRideRequests,
-    
+
 
     // for rider and driver
     updateRideStatus,
@@ -191,4 +228,7 @@ export const RideControllers = {
     updateRideByAdmin,
     getAllRides,
     getSingleRideAdmin,
+
+    // for ride history
+    getRideHistory,
 }
