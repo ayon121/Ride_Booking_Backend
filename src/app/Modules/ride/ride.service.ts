@@ -17,6 +17,15 @@ const createRideService = async (payload: Partial<IRide>, decodedToken: JwtPaylo
         throw new AppError(500, "Required ride fields are missing");
     }
 
+    const existingRide = await Ride.findOne({
+        riderId,
+        ridestatus: { $nin: ["COMPLETED", "CANCELLED"] }, 
+    });
+
+    if (existingRide) {
+        throw new AppError(400, "You already have an active ride in progress.");
+    }
+
     const ride = await Ride.create({
         riderId,
         pickupLocation,
