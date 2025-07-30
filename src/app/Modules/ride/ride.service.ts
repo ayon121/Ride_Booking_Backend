@@ -142,17 +142,28 @@ const updateRideStatusDriverService = async (rideId: string, status: string, dec
 
     if (status === RideStatus.PICKEDUP) {
         ride.ridestatus = RideStatus.PICKEDUP;
+        if (!ride.startedAt) {
+            ride.startedAt = new Date();
+        }
+
         await ride.save();
     }
 
     if (status === RideStatus.COMPLETED) {
         ride.ridestatus = RideStatus.COMPLETED;
+        if (!ride.completedAt) {
+            ride.completedAt = new Date();
+        }
         await ride.save();
 
-        //Clear driver's currentRide
+
+        //Clear driver's currentRide and add earnings
         await Driver.findByIdAndUpdate(decodedToken.userId, {
+            $inc: { earnings: ride.price || 0 },
             $set: { currentRide: null }
         });
+
+
     }
 
     return ride;
