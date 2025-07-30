@@ -53,6 +53,8 @@ const UpdateDriver = async (req: Request, res: Response, next: NextFunction) => 
 }
 
 
+
+// for admin
 const getAllDriver = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const result = await DriverServices.getAllDriverService()
@@ -72,9 +74,48 @@ const getAllDriver = async (req: Request, res: Response, next: NextFunction) => 
     }
 }
 
+
+const updateDriverByAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { driverId } = req.params;
+    const updateData = req.body;
+
+    const driver = await DriverServices.updateDriverByAdminService(driverId, updateData);
+
+    res.status(200).json({
+      success: true,
+      message: "Driver updated successfully",
+      data: driver,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+const getSingleDriverByAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { driverId } = req.params;
+
+    const driver = await DriverServices.getSingleDriverByAdminService(driverId);
+
+    res.status(200).json({
+      success: true,
+      message: "Driver fetched successfully",
+      data: driver,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 export const DriverControllers = {
     createDriver,
     UpdateDriver,
-    getAllDriver
+
+    // for admin
+    getAllDriver,
+    updateDriverByAdmin,
+    getSingleDriverByAdmin
     
 }

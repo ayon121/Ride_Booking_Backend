@@ -82,8 +82,37 @@ const UpdateDriverService = async (driverId: string, payload: Partial<IDriverFie
 };
 
 
+
+const updateDriverByAdminService = async (driverId: string,updateData: Partial<IDriverFields> ) => {
+  const updatedDriver = await Driver.findByIdAndUpdate(
+    driverId,
+    { $set: updateData },
+    { new: true }
+  );
+
+  if (!updatedDriver) {
+    throw new Error("Driver not found");
+  }
+
+  return updatedDriver;
+};
+
+
+
+const getSingleDriverByAdminService = async (driverId: string) => {
+  const driver = await Driver.findById(driverId);
+  if (!driver) {
+    throw new Error("Driver not found");
+  }
+  return driver;
+};
+
+
 export const DriverServices = {
     createDriverService,
     getAllDriverService,
-    UpdateDriverService
+    UpdateDriverService,
+    // for admin
+    updateDriverByAdminService,
+    getSingleDriverByAdminService
 }

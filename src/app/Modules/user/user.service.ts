@@ -74,10 +74,39 @@ const UpdateUserService = async (userId: string, payload: Partial<IUser>, decode
 }
 
 
+const updateUserByAdminService = async (
+  userId: string,
+  updateData: Partial<IUser> // Allow updating any field in the user
+) => {
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { $set: updateData },
+    { new: true }
+  );
+
+  if (!updatedUser) {
+    throw new Error("User not found");
+  }
+
+  return updatedUser;
+};
+
+const getSingleUserByAdminService = async (userId: string) => {
+  const user = await User.findById(userId).select("-password"); // remove password for safety
+  if (!user) {
+    throw new Error("User not found");
+  }
+  return user;
+};
+
+
 export const UserServices = {
     createUserService,
     getAllUserService,
-    UpdateUserService
+    UpdateUserService,
+    // for admin
+    updateUserByAdminService,
+    getSingleUserByAdminService
 }
 
 

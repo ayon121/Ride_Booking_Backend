@@ -83,8 +83,45 @@ const getAllUser = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 
+
+const updateUserByAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { userId } = req.params;
+    const updateData = req.body;
+
+    const user = await UserServices.updateUserByAdminService(userId, updateData);
+
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+export const getSingleUserByAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await UserServices.getSingleUserByAdminService(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "User fetched successfully",
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 export const UserControllers = {
     createUser,
     getAllUser,
     UpdateUser,
+    // for admin
+    updateUserByAdmin,
+    getSingleUserByAdmin
 }
