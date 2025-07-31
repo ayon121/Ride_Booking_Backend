@@ -10,8 +10,8 @@ router.post("/user/login", AuthControllers.creadentialUserLogin)
 router.post("/driver/login", AuthControllers.creadentialDriverLogin)
 router.post("/refresh-token", AuthControllers.getNewAccessToken)
 router.post("/logout" , AuthControllers.logout)
-router.post("/user/reset-password", checkAuth(...Object.values(Role)) , AuthControllers.resetPasswordUser)
-router.post("/driver/reset-password", checkAuth(...Object.values(Role)) , AuthControllers.resetPasswordDriver)
+router.patch("/user/reset-password", checkAuth(...Object.values(Role)) , AuthControllers.resetPasswordUser)
+router.patch("/driver/reset-password", checkAuth(...Object.values(Role)) , AuthControllers.resetPasswordDriver)
 router.get("/me", checkAuth(...Object.values(Role)) , AuthControllers.getMe)
 
 

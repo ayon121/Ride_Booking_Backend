@@ -222,3 +222,74 @@ FRONTEND_URL = http://localhost:5175
 </pre>
 <p><strong>Auth Required:</strong>  Yes</p>
 
+
+<hr>
+<hr>
+<hr>
+
+<h2>Only Driver APIs</h2>
+
+<h3>1. Driver Register API</h3>
+<p><strong>POST</strong> <code>http://localhost:5000/api/v1/driver/register</code></p>
+<pre>
+Body:
+{
+  "name": "John Driver",
+  "email": "johndriver@gmail.com",
+  "password": "A@1234567",
+  "licenseNumber": "DL-123456",
+  "vehicleType": "Car",
+  "vehicleModel": "Toyota Prius",
+  "vehiclePlate": "DHA-1234",
+  "driverlocation": "Dhaka"
+}
+</pre>
+
+<h3>2. Driver Login API</h3>
+<p><strong>POST</strong> <code>http://localhost:5000/api/v1/auth/driver/login</code></p>
+<pre>
+Body:
+{
+  "email": "johndriver@gmail.com",
+  "password": "A@1234567"
+}
+</pre>
+
+<h3>3. Driver Update Profile API</h3>
+<p><strong>PATCH</strong> <code>http://localhost:5000/api/v1/driver/updateprofile</code></p>
+<pre>
+Body:
+{
+  "name": "John Driver 12",
+  "driverlocation": "12 Dhaka"
+}
+</pre>
+
+<h3>4. Driver Reset Password API</h3>
+<p><strong>PATCH</strong> <code>http://localhost:5000/api/v1/auth/user/reset-password</code></p>
+<pre>
+Body:
+{
+  "newPassword": "A@1234567",
+  "oldPassword": "A@12345678"
+}
+</pre>
+
+<h3>5. See All Requested Rides (Driver)</h3>
+<p><strong>GET</strong> <code>http://localhost:5000/api/v1/rides/request</code></p>
+<pre>
+No body required.
+</pre>
+
+<h3>6. Driver Update Online Status</h3>
+<p><strong>PATCH</strong> <code>http://localhost:5000/api/v1/driver/updateprofile</code></p>
+<pre>
+Body:
+{
+  "isOnline": false
+}
+</pre>
+
+<hr>
+<hr>
+<hr>

@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.post("/register", validateRequest(createDriverZodSchema), DriverControllers.createDriver );
 
-router.post("/updateprofile", validateRequest(updateDriverZodSchema) , checkAuth( Role.DRIVER)  , DriverControllers.UpdateDriver );
+router.patch("/updateprofile", validateRequest(updateDriverZodSchema) , checkAuth( Role.DRIVER)  , DriverControllers.UpdateDriver );
 
 // admin or super admin routes
 router.get("/alldrivers" , checkAuth( Role.ADMIN, Role.SUPER_ADMIN)  , DriverControllers.getAllDriver);
