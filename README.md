@@ -139,3 +139,86 @@ FRONTEND_URL = http://localhost:5175
   <li>Driver review schema stored inside driver model</li>
 </ul>
 
+<h3> Ride Flow</h3>
+<ul>
+  <li>User requests a ride</li>
+  <li>Driver accepts if not suspended</li>
+  <li>Ride status updates (REQUESTED → ACCEPTED → PICKED_UP → COMPLETED)</li>
+  <li>Upon PICKED_UP, startedAt is recorded</li>
+  <li>Start time of ride is recorded only on PICKED_UP</li>
+  <li>Upon COMPLETED, driver earnings are increased</li>
+</ul>
+
+
+<hr>
+<hr>
+
+<h2>API Endpoints</h2>
+
+<h2>Only User APIs (Rider)</h2>
+
+<h3>1. Rider Register API</h3>
+<p><strong>Endpoint:</strong> <code>POST http://localhost:5000/api/v1/user/register</code></p>
+<p><strong>Description:</strong> Registers a new rider.</p>
+<p><strong>Request Body:</strong></p>
+<pre>
+{
+  "name": "ayon rider",
+  "email": "ayon1@gmail.com",
+  "password": "A@12345678"
+}
+</pre>
+
+<hr>
+
+<h3>2. Rider Update Profile API</h3>
+<p><strong>Endpoint:</strong> <code>PATCH http://localhost:5000/api/v1/user/update</code></p>
+<p><strong>Description:</strong> Updates rider's profile (name, etc.).</p>
+<p><strong>Request Body:</strong></p>
+<pre>
+{
+  "name": "ayon rider 12"
+}
+</pre>
+
+<hr>
+
+<h3>3. Rider Login API</h3>
+<p><strong>Endpoint:</strong> <code>POST http://localhost:5000/api/v1/auth/user/login</code></p>
+<p><strong>Description:</strong> Logs in a rider and sets authentication cookies.</p>
+<p><strong>Request Body:</strong></p>
+<pre>
+{
+  "email": "ayon1@gmail.com",
+  "password": "A@12345678"
+}
+</pre>
+
+<hr>
+
+<h3>4. Rider Reset Password API</h3>
+<p><strong>Endpoint:</strong> <code>PATCH http://localhost:5000/api/v1/auth/user/reset-password</code></p>
+<p><strong>Description:</strong> Allows a rider to reset their password.</p>
+<p><strong>Request Body:</strong></p>
+<pre>
+{
+  "newPassword": "A@1234567",
+  "oldPassword": "A@12345678"
+}
+</pre>
+
+<hr>
+
+<h3>5. Request Ride API</h3>
+<p><strong>Endpoint:</strong> <code>POST http://localhost:5000/api/v1/rides/request</code></p>
+<p><strong>Description:</strong> Allows a rider to request a new ride.</p>
+<p><strong>Request Body:</strong></p>
+<pre>
+{
+  "pickupLocation": "12345 Chittagong",
+  "dropLocation": "1234 Dhaka",
+  "price": 3000
+}
+</pre>
+<p><strong>Auth Required:</strong>  Yes</p>
+
