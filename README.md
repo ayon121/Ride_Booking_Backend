@@ -352,3 +352,113 @@ Body:
 <hr>
 <hr>
 <hr>
+
+<h2>Admin or Super_Admin APIs</h2>
+
+<h3>1. Admin Login</h3>
+<p><strong>POST</strong> <code>http://localhost:5000/api/v1/auth/user/login</code></p>
+<p>Authenticates an admin user and returns tokens.</p>
+<pre>
+{
+  "email": "super@gmail.com",
+  "password": "ayon1234"
+}
+</pre>
+
+<hr>
+
+<h3>2. Admin Dashboard Analytics</h3>
+<p><strong>GET</strong> <code>http://localhost:5000/api/v1/user/dashboard/admin</code></p>
+<p>Retrieves analytics data for the admin dashboard.</p>
+<pre>
+{
+  "statusCode": 200,
+  "success": true,
+  "message": "Admin Analytics fetched successfully",
+  "data": {
+    "totalUsers": 2,
+    "totalDrivers": 1,
+    "totalRides": 1,
+    "totalEarnings": 0,
+    "activeRides": 1
+  }
+}
+</pre>
+
+<hr>
+
+<h3>3. Get All Drivers</h3>
+<p><strong>GET</strong> <code>http://localhost:5000/api/v1/driver/alldrivers</code></p>
+<p>Retrieves a list of all drivers in the system.</p>
+
+<hr>
+
+<h3>4. Get All Riders</h3>
+<p><strong>GET</strong> <code>http://localhost:5000/api/v1/user/all-users</code></p>
+<p>Retrieves a list of all riders/users in the system.</p>
+
+<hr>
+
+<h3>5. Get All Rides</h3>
+<p><strong>GET</strong> <code>http://localhost:5000/api/v1/rides/all</code></p>
+<p>Retrieves all rides in the system.</p>
+
+<hr>
+
+<h3>6. Update Driver Profile</h3>
+<p><strong>PATCH</strong> <code>http://localhost:5000/api/v1/driver/updatedriver</code></p>
+<p>Allows admin to update any driver’s profile information including name, email, password, and role.</p>
+<pre>
+{
+  "name": "ayon rider",
+  "email": "ayon12@gmail.com",
+  "role": "ADMIN"
+}
+</pre>
+
+<hr>
+
+<h3>7. Update Rider Profile</h3>
+<p><strong>PATCH</strong> <code>http://localhost:5000/api/v1/user/update-users</code></p>
+<p>Allows admin to update any rider’s profile including name, email, and role.</p>
+<pre>
+{
+  "name": "ayon rider",
+  "email": "ayon12@gmail.com",
+  "role": "ADMIN"
+}
+</pre>
+
+<hr>
+
+<h3>8. Update Ride</h3>
+<p><strong>PATCH</strong> <code>http://localhost:5000/api/v1/rides/updateride/:rideId</code></p>
+<p>Allows admin to update any ride details such as <code>ridestatus</code> and <code>price</code>.</p>
+<pre>
+{
+  "ridestatus": "COMPLETED",
+  "price": 550
+}
+</pre>
+<p><em>Replace <code>:rideId</code> with the actual ride ID.</em></p>
+
+<hr>
+
+<h3>9. Get Single Ride</h3>
+<p><strong>GET</strong> <code>http://localhost:5000/api/v1/rides/singleride/:rideId</code></p>
+<p>Retrieves details of a specific ride by ID.</p>
+<p><em>Replace <code>:rideId</code> with the actual ride ID.</em></p>
+
+<hr>
+
+<h3>10. Get Single User</h3>
+<p><strong>GET</strong> <code>http://localhost:5000/api/v1/user/:userId</code></p>
+<p>Retrieves details of a specific user (rider) by ID.</p>
+<p><em>Replace <code>:userId</code> with the actual user ID.</em></p>
+
+<hr>
+
+<h3>11. Get Single Driver</h3>
+<p><strong>GET</strong> <code>http://localhost:5000/api/v1/driver/:driverId</code></p>
+<p>Retrieves details of a specific driver by ID.</p>
+<p><em>Replace <code>:driverId</code> with the actual driver ID.</em></p>
