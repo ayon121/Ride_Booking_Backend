@@ -9,6 +9,7 @@ const DriverReviewSchema = new Schema<IDriverReviews>(
     rating: { type: Number, required: true },
     review: { type: String },
     riderId: { type: Schema.Types.ObjectId, ref: "User" },
+    rideId: { type: Schema.Types.ObjectId, ref: "Ride", required: true },
     createdAt: { type: Date, default: Date.now },
   },
 );

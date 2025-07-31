@@ -5,6 +5,8 @@ export interface IDriverReviews {
     rating: number;
     review?: string;
     riderId: Types.ObjectId;
+    rideId : Types.ObjectId;
+    driverId : Types.ObjectId;
     createdAt?: Date;
 }
 

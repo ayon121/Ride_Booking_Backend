@@ -276,6 +276,8 @@ const getDriverRideHistoryService = async (decodedToken: JwtPayload) => {
 };
 
 
+
+
 export const RideServices = {
     //for riders
     updateRideStatusRiderService,
