@@ -34,3 +34,12 @@ src/app
 
 
 
+<h2> Getting Started</h2>
+<h3>1. Clone the Repo</h3>
+<pre><code>
+git clone https://github.com/ayon121/Ride_Booking_Backend.git
+cd ride-booking-api
+</code></pre>
+<h3>2. Install Dependencies</h3>
+<pre><code>npm install</code></pre>
+<hr>
