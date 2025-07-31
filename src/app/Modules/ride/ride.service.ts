@@ -19,7 +19,7 @@ const createRideService = async (payload: Partial<IRide>, decodedToken: JwtPaylo
 
     const existingRide = await Ride.findOne({
         riderId,
-        ridestatus: { $nin: ["COMPLETED", "CANCELLED"] }, 
+        ridestatus: { $nin: [RideStatus.COMPLETED, RideStatus.CANCELLED] }, 
     });
 
     if (existingRide) {

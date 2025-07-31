@@ -6,6 +6,8 @@ import AppError from "../../ErrorHelpers/AppError";
 import { IAuthProvider, IUser, Role } from "./user.interface";
 import { User } from "./user.model";
 import bcrypt from "bcryptjs";
+import Ride from "../ride/ride.model";
+import Driver from "../driver/driver.model";
 
 const createUserService = async (payload: Partial<IUser>) => {
     const { email, password, ...rest } = payload;
@@ -101,13 +103,46 @@ const getSingleUserByAdminService = async (userId: string) => {
 };
 
 
+
+
+const getAdminAnalyticsService = async () => {
+  const totalUsers = await User.countDocuments();
+  const totalDrivers = await Driver.countDocuments();
+  const totalRides = await Ride.countDocuments();
+
+  const totalEarningsData = await Driver.aggregate([
+    {
+      $group: {
+        _id: null,
+        total: { $sum: "$earnings" }
+      }
+    }
+  ]);
+  const totalEarnings = totalEarningsData[0]?.total || 0;
+
+  const activeRides = await Ride.countDocuments({
+    ridestatus: { $nin: ["COMPLETED", "CANCELLED"] }
+  });
+
+
+  return {
+    totalUsers,
+    totalDrivers,
+    totalRides,
+    totalEarnings,
+    activeRides,
+  };
+
+}
+
 export const UserServices = {
     createUserService,
     getAllUserService,
     UpdateUserService,
     // for admin
     updateUserByAdminService,
-    getSingleUserByAdminService
+    getSingleUserByAdminService,
+    getAdminAnalyticsService,
 }
 
 

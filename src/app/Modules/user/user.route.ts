@@ -23,5 +23,7 @@ Userrouter.post("/update", checkAuth(...Object.values(Role)) , UserControllers.U
 // admin or super admin routes
 Userrouter.get("/all-users", checkAuth( Role.ADMIN, Role.SUPER_ADMIN) , UserControllers.getAllUser)
 Userrouter.patch("/update-users", checkAuth( Role.ADMIN, Role.SUPER_ADMIN) , UserControllers.updateUserByAdmin)
+Userrouter.get("/dashboard/admin", checkAuth( Role.ADMIN, Role.SUPER_ADMIN) , UserControllers.getAdminAnalytics)
 Userrouter.get("/:userId", checkAuth( Role.ADMIN, Role.SUPER_ADMIN) , UserControllers.getSingleUserByAdmin)
+
 
