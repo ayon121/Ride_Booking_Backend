@@ -293,3 +293,62 @@ Body:
 <hr>
 <hr>
 <hr>
+
+
+<h2>Shared APIs (Rider, Driver, Admin)</h2>
+
+<h3>1. Get Profile</h3>
+<p><strong>GET</strong> <code>http://localhost:5000/api/v1/auth/me</code></p>
+<p>Fetches the profile of the currently logged-in user (rider, driver, or admin). Password is excluded.</p>
+<p><strong>Auth Required:</strong>  Yes</p>
+
+<hr>
+
+<h3>2. Logout</h3>
+<p><strong>POST</strong> <code>http://localhost:5000/api/v1/auth/logout</code></p>
+<p>Logs out the current user by clearing authentication cookies.</p>
+<p><strong>Auth Required:</strong>  Yes</p>
+
+<hr>
+
+<h3>3. Refresh Token</h3>
+<p><strong>POST</strong> <code>http://localhost:5000/api/v1/auth/refresh-token</code></p>
+<p>Generates a new access token using a valid refresh token stored in cookies.</p>
+<p><strong>Auth Required:</strong> Yes (refresh token in cookies)</p>
+
+<hr>
+
+<h3>4. Ride Status Change</h3>
+<p><strong>PATCH</strong> <code>http://localhost:5000/api/v1/rides/status/:rideId</code></p>
+<p>Updates the ride status.</p>
+<ul>
+  <li>Rider can set status: <code>REQUESTED</code>, <code>CANCELLED</code></li>
+  <li>Driver can set status: <code>ACCEPTED</code>, <code>PICKEDUP</code>, <code>INTRANSIT</code>, <code>COMPLETED</code></li>
+</ul>
+<p><strong>Request Body:</strong></p>
+<pre>
+{
+  "status": "COMPLETED"
+}
+</pre>
+<p><strong>Auth Required:</strong>  Yes</p>
+<p><em>Replace <code>:rideId</code> with actual ride ID.</em></p>
+
+<hr>
+
+<h3>5. Ride History</h3>
+<p><strong>GET</strong> <code>http://localhost:5000/api/v1/rides/history</code></p>
+<p>Retrieves ride history for the logged-in rider or driver.</p>
+<p><strong>Auth Required:</strong>  Yes</p>
+
+<hr>
+
+<h3>6. Get Current Ride</h3>
+<p><strong>GET</strong> <code>http://localhost:5000/api/v1/rides/me</code></p>
+<p>Retrieves current active ride details for the logged-in rider or driver.</p>
+<p><strong>Auth Required:</strong>  Yes</p>
+
+
+<hr>
+<hr>
+<hr>
