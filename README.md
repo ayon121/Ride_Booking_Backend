@@ -42,4 +42,25 @@ cd ride-booking-api
 </code></pre>
 <h3>2. Install Dependencies</h3>
 <pre><code>npm install</code></pre>
+<h3>3. Setup Env Variables </h3>
+<pre><code>
+PORT=5000
+DB_URL= db url
+NODE_ENV=development
+# jwt
+JWT_SECRET = weretrtrytyty12334535frgv
+Jwt_ACCESS_EXPIRES = 1d
+Jwt_REFRESH_SECRET = jwt
+Jwt_REFRESH_EXPRIES = 30d
+
+BCRYPT_SALT = 10 
+
+SUPER_ADMIN_EMAIL = super@gmail.com
+SUPER_ADMIN_PASS = ayon1234
+
+EXPRESS_SESSION_SECRET = express-session
+
+
+FRONTEND_URL = http://localhost:5175
+</code></pre>
 <hr>
