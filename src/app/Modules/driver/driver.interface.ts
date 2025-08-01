@@ -2,14 +2,13 @@ import { Types } from "mongoose";
 import { IAuthProvider, IsActive, Role } from "../user/user.interface";
 
 export interface IDriverReviews {
-    rating: number;
-    review?: string;
-    riderId: Types.ObjectId;
-    rideId : Types.ObjectId;
-    driverId : Types.ObjectId;
-    createdAt?: Date;
+  rating: number;
+  review?: string;
+  riderId?: Types.ObjectId; 
+  rideId: Types.ObjectId;
+  driverId: Types.ObjectId;
+  createdAt?: Date;
 }
-
 
 
 export interface IDriverFields {

@@ -10,6 +10,7 @@ const DriverReviewSchema = new Schema<IDriverReviews>(
     review: { type: String },
     riderId: { type: Schema.Types.ObjectId, ref: "User" },
     rideId: { type: Schema.Types.ObjectId, ref: "Ride", required: true },
+    driverId: { type: Schema.Types.ObjectId, ref: "Driver", required: true },
     createdAt: { type: Date, default: Date.now },
   },
 );
@@ -63,3 +64,6 @@ const DriverSchema = new Schema<IDriverFields>(
 
 const Driver = model<IDriverFields>("Driver", DriverSchema);
 export default Driver;
+
+
+
