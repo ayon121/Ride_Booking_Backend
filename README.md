@@ -267,7 +267,7 @@ Body:
 </pre>
 
 <h3>4. Driver Reset Password API</h3>
-<p><strong>PATCH</strong> <code>http://localhost:5000/api/v1/auth/user/reset-password</code></p>
+<p><strong>PATCH</strong> <code>http://localhost:5000/api/v1/auth/driver/reset-password</code></p>
 <pre>
 Body:
 {
