@@ -9,6 +9,7 @@
   <li><strong>TypeScript</strong></li>
   <li><strong>MongoDB</strong> with <strong>Mongoose</strong></li>
   <li><strong>JWT</strong> for auth (access + refresh)</li>
+  <li><strong>Bcrypt</strong> for Passowrd Hashing</li>
   <li><strong>Passport.js</strong> (local + Google strategy)</li>
   <li><strong>Role-based access control</strong> (User, Driver, Admin)</li>
 </ul>
