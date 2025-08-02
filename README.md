@@ -407,7 +407,7 @@ Body:
 <hr>
 
 <h3>6. Update Driver Profile</h3>
-<p><strong>PATCH</strong> <code>http://localhost:5000/api/v1/driver/updatedriver</code></p>
+<p><strong>PATCH</strong> <code>http://localhost:5000/api/v1/driver/updatedriver/:id</code></p>
 <p>Allows admin to update any driver’s profile information including name, email, password, and role.</p>
 <pre>
 {
@@ -420,7 +420,7 @@ Body:
 <hr>
 
 <h3>7. Update Rider Profile</h3>
-<p><strong>PATCH</strong> <code>http://localhost:5000/api/v1/user/update-users</code></p>
+<p><strong>PATCH</strong> <code>http://localhost:5000/api/v1/user/update-users/:id</code></p>
 <p>Allows admin to update any rider’s profile including name, email, and role.</p>
 <pre>
 {
