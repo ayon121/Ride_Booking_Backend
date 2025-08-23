@@ -3,6 +3,7 @@ import { Userrouter } from "../user/user.route"
 import { AuthRoutes } from "../auth/auth.route"
 import { DriverRoutes } from "../driver/driver.route"
 import { Rideroute } from "../ride/ride.route"
+import Contactrouter from "../contact/contact.route"
 
 export const router = Router()
 const moduleRoutes = [
@@ -21,6 +22,10 @@ const moduleRoutes = [
     {
         path : "/auth",
         route : AuthRoutes
+    },
+    {
+        path : "/contact",
+        route : Contactrouter
     },
 ]
 

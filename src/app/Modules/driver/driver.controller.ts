@@ -55,6 +55,40 @@ const UpdateDriver = async (req: Request, res: Response, next: NextFunction) => 
 }
 
 
+export const getDriverAnalytics = async (req: Request, res: Response ,  next: NextFunction) => {
+  const decodedToken = req.user as JwtPayload;
+
+  try {
+    const driver = await Driver.findById(decodedToken.userId)
+      .populate("currentRide")
+      .populate("Ridehistory");
+
+    if (!driver) {
+      return res.status(404).json({ message: "Driver not found" });
+    }
+
+    const analytics = {
+      name: driver.name,
+      email: driver.email,
+      isOnline: driver.isOnline,
+      isActive: driver.isActive,
+      isOnRide: driver.isOnRide,
+      totalRides: driver.totalRides,
+      earnings: driver.earnings,
+      rating: driver.rating,
+      completedRides: driver.Ridehistory?.length || 0,
+      currentRide: driver.currentRide || null,
+    };
+
+    return res.status(200).json({ success: true, data: analytics });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+      next(err)
+  }
+};
+
+
+
 
 // for admin
 const getAllDriver = async (req: Request, res: Response, next: NextFunction) => {
