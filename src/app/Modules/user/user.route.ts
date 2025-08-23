@@ -17,7 +17,7 @@ export const Userrouter = Router()
 
 Userrouter.post("/register", validateRequest(createUserZodSchema), UserControllers.createUser)
 
-Userrouter.post("/update", checkAuth(...Object.values(Role)) , UserControllers.UpdateUser)
+Userrouter.patch("/update", checkAuth(...Object.values(Role)) , UserControllers.UpdateUser)
 
 
 // admin or super admin routes

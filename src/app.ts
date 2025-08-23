@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import cors from "cors";
 import cookie from "cookie-parser";
 import express, { Request, Response } from "express";
