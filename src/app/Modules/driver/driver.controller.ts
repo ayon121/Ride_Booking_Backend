@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { DriverServices } from "./driver.service";
 import { sendResponse } from "../../utils/sendResponse";
 import { JwtPayload } from "jsonwebtoken";
+import { QueryBuilder } from "../../utils/QueryBuilder";
+import Driver from "./driver.model";
 
 
 const createDriver = async (req: Request, res: Response, next: NextFunction) => {
@@ -57,13 +59,20 @@ const UpdateDriver = async (req: Request, res: Response, next: NextFunction) => 
 // for admin
 const getAllDriver = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await DriverServices.getAllDriverService()
+
+        const builder = new QueryBuilder(Driver.find(), req.query as Record<string, string>);
+        builder.filter().search(['name', 'email']).sort().fields().paginate();
+
+
+        const driver= await builder.build();
+        const meta = await builder.getMeta();
+
         sendResponse(res , {
             success : true,
             statusCode : 201,
             message : "All Driver Fetched Successfully",
-            data : result.data,
-            meta : result.meta,
+            data : driver,
+            meta ,
         })
 
 
@@ -73,6 +82,7 @@ const getAllDriver = async (req: Request, res: Response, next: NextFunction) => 
 
     }
 }
+
 
 
 const updateDriverByAdmin = async (req: Request, res: Response, next: NextFunction) => {
