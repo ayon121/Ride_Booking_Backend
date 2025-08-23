@@ -5,6 +5,8 @@ import { JwtPayload } from "jsonwebtoken";
 import { User } from "../user/user.model";
 import { Role } from "../user/user.interface";
 import { RideStatus } from "./ride.interface";
+import { QueryBuilder } from "../../utils/QueryBuilder";
+import Ride from "./ride.model";
 
 
 
@@ -38,13 +40,19 @@ const RequestRide = async (req: Request, res: Response, next: NextFunction) => {
 
 const getAllRides = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await RideServices.getAllRideService()
+
+        const builder = new QueryBuilder(Ride.find().populate("riderId", "name email").populate("driverId", "name email"), req.query as Record<string, string>);
+        builder.filter().search(['pickupLocation', 'dropLocation', 'paymentMethod']).sort().fields().paginate();
+
+        const ride = await builder.build();
+        const meta = await builder.getMeta();
+
         sendResponse(res, {
             success: true,
             statusCode: 201,
             message: "All Rides Fetched Successfully",
-            data: result.data,
-            meta: result.meta,
+            data: ride,
+            meta,
         })
 
 

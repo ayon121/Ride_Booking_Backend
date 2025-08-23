@@ -4,6 +4,8 @@ import { NextFunction, Request, Response } from "express";
 import { UserServices } from "./user.service";
 import { sendResponse } from "../../utils/sendResponse";
 import { JwtPayload } from "jsonwebtoken";
+import { QueryBuilder } from "../../utils/QueryBuilder";
+import { User } from "./user.model";
 
 
 
@@ -62,13 +64,19 @@ const UpdateUser = async (req: Request, res: Response, next: NextFunction) => {
 
 const getAllUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await UserServices.getAllUserService()
+
+        const builder = new QueryBuilder(User.find(), req.query as Record<string, string>);
+        builder.filter().search(['name', 'email']).sort().fields().paginate();
+
+         const user= await builder.build();
+        const meta = await builder.getMeta();
+        
         sendResponse(res, {
             success: true,
             statusCode: 201,
             message: "All User Fetched Successfully",
-            data: result.data,
-            meta: result.meta,
+            data: user,
+            meta,
         })
 
 
