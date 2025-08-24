@@ -35,4 +35,6 @@ export interface IUser {
   isOnRide ?: boolean;
   currentRide?: Types.ObjectId;        
   previousRides?: Types.ObjectId[];
+  Ridehistory?: Types.ObjectId[];
+
 }
