@@ -122,13 +122,15 @@ const logout = async (req: Request, res: Response, next: NextFunction) => {
     try {
         res.clearCookie("accesstoken", {
             httpOnly: true,
-            secure: false,
-            sameSite: "lax"
+            secure: true,
+            sameSite: "none",
+            path: "/",
         })
         res.clearCookie("refreshtoken", {
             httpOnly: true,
-            secure: false,
-            sameSite: "lax"
+            secure: true,
+            sameSite: "none",
+            path: "/",
         })
 
         sendResponse(res, {

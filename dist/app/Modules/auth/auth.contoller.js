@@ -117,13 +117,15 @@ const logout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
     try {
         res.clearCookie("accesstoken", {
             httpOnly: true,
-            secure: false,
-            sameSite: "lax"
+            secure: true,
+            sameSite: "none",
+            path: "/",
         });
         res.clearCookie("refreshtoken", {
             httpOnly: true,
-            secure: false,
-            sameSite: "lax"
+            secure: true,
+            sameSite: "none",
+            path: "/",
         });
         (0, sendResponse_1.sendResponse)(res, {
             success: true,
