@@ -24,7 +24,7 @@ app.use(passport_1.default.session());
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
-    origin: ["http://localhost:3000"], // frontend origin
+    origin: ["http://localhost:3000", "https://ride-frontend-zeta.vercel.app"], // frontend origin
     credentials: true // if you use cookies (for JWT)
 }));
 app.use("/api/v1/", routes_1.router);

@@ -16,6 +16,6 @@ router.post("/register", (0, validateRequest_1.validateRequest)(driver_validatio
 router.patch("/updateprofile", (0, validateRequest_1.validateRequest)(driver_validation_1.updateDriverZodSchema), (0, CheckAuth_1.checkAuth)(user_interface_1.Role.DRIVER), driver_controller_1.DriverControllers.UpdateDriver);
 // admin or super admin routes
 router.get("/alldrivers", (0, CheckAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), driver_controller_1.DriverControllers.getAllDriver);
-router.patch("/updatedriver", (0, CheckAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), driver_controller_1.DriverControllers.updateDriverByAdmin);
+router.patch("/updatedriver/:driverId", (0, CheckAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), driver_controller_1.DriverControllers.updateDriverByAdmin);
 router.get("/:driverId", (0, CheckAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), driver_controller_1.DriverControllers.getSingleDriverByAdmin);
 exports.DriverRoutes = router;

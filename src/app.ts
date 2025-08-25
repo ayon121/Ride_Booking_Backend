@@ -25,8 +25,8 @@ app.use(passport.session())
 app.use(express.json())
 app.use(cookie())
 app.use(cors({
-  origin: ["http://localhost:3000"], // frontend origin
-  credentials: true // if you use cookies (for JWT)
+  origin: ["http://localhost:3000" , "https://ride-frontend-zeta.vercel.app"], 
+  credentials: true 
 }));  
 
 

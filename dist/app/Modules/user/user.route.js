@@ -12,6 +12,6 @@ exports.Userrouter.post("/register", (0, validateRequest_1.validateRequest)(user
 exports.Userrouter.patch("/update", (0, CheckAuth_1.checkAuth)(...Object.values(user_interface_1.Role)), user_controller_1.UserControllers.UpdateUser);
 // admin or super admin routes
 exports.Userrouter.get("/all-users", (0, CheckAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), user_controller_1.UserControllers.getAllUser);
-exports.Userrouter.patch("/update-users", (0, CheckAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), user_controller_1.UserControllers.updateUserByAdmin);
+exports.Userrouter.patch("/update-users/:userId", (0, CheckAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), user_controller_1.UserControllers.updateUserByAdmin);
 exports.Userrouter.get("/dashboard/admin", (0, CheckAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), user_controller_1.UserControllers.getAdminAnalytics);
 exports.Userrouter.get("/:userId", (0, CheckAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), user_controller_1.UserControllers.getSingleUserByAdmin);

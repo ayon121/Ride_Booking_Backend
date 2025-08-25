@@ -15,7 +15,7 @@ router.patch("/updateprofile", validateRequest(updateDriverZodSchema) , checkAut
 
 // admin or super admin routes
 router.get("/alldrivers" , checkAuth( Role.ADMIN, Role.SUPER_ADMIN)  , DriverControllers.getAllDriver);
-router.patch("/updatedriver" , checkAuth( Role.ADMIN, Role.SUPER_ADMIN)  , DriverControllers.updateDriverByAdmin);
+router.patch("/updatedriver/:driverId" , checkAuth( Role.ADMIN, Role.SUPER_ADMIN)  , DriverControllers.updateDriverByAdmin);
 router.get("/:driverId" ,  checkAuth( Role.ADMIN, Role.SUPER_ADMIN)  , DriverControllers.getSingleDriverByAdmin);
 
 export const DriverRoutes = router;
